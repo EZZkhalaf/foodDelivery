@@ -1,42 +1,6 @@
-// import { offers } from "@/components";
-// import cn from 'clsx';
-// import { Fragment } from "react";
-// import { FlatList, Image, Pressable, View } from "react-native";
-// import { SafeAreaView } from "react-native-safe-area-context";
-// import './globals.css';
-// export default function Index() {
-//   return (
-//     <SafeAreaView>
-//       <FlatList 
-//         data = {offers}
-//         renderItem = {({item , index}) => {
-//           const isEven : number = index %2 == 0;
-//           return (
-//             <View >
-//               <Pressable className={cn("offer-card" , isEven ? 'flex-row-reverse' : 'flex-row')} style = {{backgroundColor : item.color}}>
-//                 {({pressed}) => (
-//                   <Fragment>
-//                     <View className="h-full w-1/2" >
-//                       <Image source = {item.image} className="size-full" resizeMethod = {"contain"}/>
-//                     </View>
-//                     <View className={"offer-card_info"}>
-
-//                     </View>
-//                   </Fragment>
-//                 )}
-//               </Pressable>
-//             </View>
-//           )
-//         }}
-//       />
-//     </SafeAreaView>
-//   );
-// }
-
-
-
 import { images, offers } from "@/components";
-import cn from 'clsx'; // okay if used with NativeWind
+import CartButton from "@/components/CartButton";
+import cn from 'clsx';
 import { Fragment } from "react";
 import { FlatList, Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -56,7 +20,9 @@ export default function Index() {
                 <Image source={images.arrowDown} className="w-3 h-3 ml-1" resizeMode="contain" />
               </TouchableOpacity>
             </View>
-            <Text>Cart</Text>
+            <View>
+              <CartButton />
+            </View>
           </View>
         }
         renderItem={({ item, index }) => {
@@ -65,19 +31,25 @@ export default function Index() {
             <View className="mb-4 px-4">
               <Pressable
                 className={cn("offer-card", isEven ? "flex-row-reverse" : "flex-row")}
-                style={{ backgroundColor: item.color }}
+                style={{
+                  backgroundColor: item.color,
+                  borderRadius: 12,
+                  padding: 12,
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
               >
                 {({ pressed }) => (
                   <Fragment>
-                    <View className="h-full w-1/2">
+                    <View style={{ width: '50%' }}>
                       <Image
                         source={typeof item.image === "string" ? { uri: item.image } : item.image}
-                        className="w-full h-full"
+                        style={{ width: '100%', height: 100 }} // ✅ Give fixed height
                         resizeMode="contain"
                       />
                     </View>
-                    <View className="offer-card_info items-center justify-center">
-                      <Text className="text-lg font-bold text-white">{item.title}</Text>
+                    <View style={{ width: '50%', alignItems: 'center', justifyContent: 'center' }}>
+                      <Text className="text-lg font-bold text-white text-center">{item.title}</Text>
                     </View>
                   </Fragment>
                 )}
@@ -85,9 +57,12 @@ export default function Index() {
             </View>
           );
         }}
-        contentContainerClassName="pb-20"
+        
+        contentContainerStyle={{
+          paddingBottom: 120, // ✅ give extra space to scroll past CartButton
+        }}
+        showsVerticalScrollIndicator={false}
       />
     </SafeAreaView>
-
   );
 }
